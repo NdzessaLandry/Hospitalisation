@@ -1,4 +1,4 @@
-# 📦 Chargement des packages
+#  Chargement des packages
 library(shiny)
 library(shinydashboard)
 library(DT)
@@ -8,17 +8,15 @@ library(tibble)
 library(bslib)
 library(shinymanager)
 
-# 🔐 Comptes utilisateurs
 credentials <- data.frame(
   user = c("hopital central yaounde", "user1"),
-  password = c("hopital central yaounde", "user123"),  # à remplacer
+  password = c("hopital central yaounde", "user123"), 
   stringsAsFactors = FALSE
 )
 
-# 📂 Lien vers la feuille Google Sheets
 url <- "https://docs.google.com/spreadsheets/d/1T6GJz7YVZkFwlvuOO5oVjDM5M4gFqFQpTkZVHiF4zO0/edit?usp=sharing"
 
-# 🔄 Lecture des données avec gestion des pages vides
+
 lire_toutes_les_feuilles <- function(sheet_url) {
   feuilles <- sheet_properties(sheet_url)$name
   
@@ -46,7 +44,7 @@ lire_toutes_les_feuilles <- function(sheet_url) {
   return(data_par_service)
 }
 
-# 📊 Patients hospitalisés
+#  Patients hospitalisés
 lesPatients <- function(data_par_service) {
   colonnes_voulues <- c("Noms et Prénoms", "Date d'entrée", "NIP", "Service")
   
@@ -80,7 +78,7 @@ lesPatients <- function(data_par_service) {
   bind_rows(patients_sans_sortie)
 }
 
-# 📈 Nombre de patients par service
+# Nombre de patients par service
 patients_present_par_service <- function(data_par_service) {
   resultats <- lapply(names(data_par_service), function(service) {
     donnees <- data_par_service[[service]]
@@ -96,10 +94,10 @@ patients_present_par_service <- function(data_par_service) {
   bind_rows(resultats)
 }
 
-# 📦 Lecture des données (une seule fois)
+# Lecture des données (une seule fois)
 data <- lire_toutes_les_feuilles(url)
 
-# 🎨 Thème rose Windows 11
+# Thème rose Windows 11
 mon_theme <- bs_theme(
   version = 5,
   bootswatch = "flatly",
@@ -107,7 +105,7 @@ mon_theme <- bs_theme(
   base_font = font_google("Segoe UI")
 )
 
-# 🔒 Interface sécurisée
+# Interface sécurisée
 ui <- secure_app(
   dashboardPage(
     dashboardHeader(title = "Suivi des Hospitalisations"),
@@ -139,11 +137,16 @@ ui <- secure_app(
   )
 )
 
-# 🔧 Serveur
+# Serveur
 server <- function(input, output, session) {
   
   # Authentification obligatoire
-  res_auth <- secure_server(check_credentials = check_credentials(credentials))
+  res_auth <- secure_server(
+    check_credentials = check_credentials(
+      "auth_db.sqlite",
+      passphrase = "hopital central de yaounde"
+    )
+  )
   
   output$table_patients <- renderDT({
     datatable(lesPatients(data), options = list(pageLength = 10))
@@ -158,5 +161,5 @@ server <- function(input, output, session) {
   });
 }
 
-# 🚀 Lancer l'application
+#  Lancer l'application
 shinyApp(ui, server)

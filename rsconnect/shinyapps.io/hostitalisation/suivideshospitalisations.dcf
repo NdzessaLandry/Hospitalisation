@@ -1,0 +1,10 @@
+name: suivideshospitalisations
+title:
+username: hostitalisation
+account: hostitalisation
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15110386
+bundleId: 10657615
+url: https://hostitalisation.shinyapps.io/suivideshospitalisations/
+version: 1

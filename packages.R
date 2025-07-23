@@ -1,0 +1,10 @@
+install.packages(c(
+  "shiny",
+  "shinydashboard",
+  "shinymanager",
+  "dplyr",
+  "DT",
+  "tibble",
+  "googlesheets4",
+  "bslib"
+))
